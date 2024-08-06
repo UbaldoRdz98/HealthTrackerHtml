@@ -1,0 +1,58 @@
+/* Reset some default styles */
+body, h1, p {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos del encabezado */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px; /* Añadido padding para espaciado interno del navbar */
+    position: fixed; /* Fijo para que esté siempre en la parte superior */
+    width: 100%; /* Asegura que el navbar ocupe todo el ancho de la pantalla */
+    top: 0; /* Posiciona el navbar en la parte superior */
+    left: 0; /* Asegura que esté alineado con el borde izquierdo */
+    z-index: 1000; /* Asegura que el navbar esté sobre otros elementos */
+}
+
+/* Estilo del contenedor del navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el navbar horizontalmente */
+    height: 60px; /* Añadido para proporcionar altura al navbar */
+}
+
+/* Estilo de la parte izquierda del navbar */
+.nav-left a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    font-size: 1.5em;
+}
+
+.nav-left a:hover {
+    text-decoration: underline; /* Subrayado al pasar el ratón */
+}
+
+/* Estilo de los enlaces en la parte derecha del navbar */
+.nav-right a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.nav-right a:hover {
+    text-decoration: underline;
+}
