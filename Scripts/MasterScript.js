@@ -1,5 +1,7 @@
 var ruta = 'http://ec2-3-21-63-56.us-east-2.compute.amazonaws.com:3333';
 var userId = localStorage.getItem('userId');
+var idDetailOk = 0;
+
 function formatDateToDDMMYYYY(isoDate) {
     const date = new Date(isoDate);
 
@@ -276,10 +278,10 @@ async function deleteActivity(activityId) {
             alert('Actividad eliminada con éxito');
             window.location.reload();
         } else {
-            alert(response.data.message || 'Error desconocido');
+            alert('Hay detalles, no se puede eliminar');
         }
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert('Hay detalles, no se puede eliminar');
     }
 }
 
@@ -313,7 +315,7 @@ async function fetchHealthData() {
                     <td class="action-buttons">
                         <button class="edit-button" onclick="ABCHealthData('Edit', ${item.id})">Edit</button>
                         <button class="detail-button" onclick="ABCHealthData('See', ${item.id})">See</button>
-                        <button class="delete-button" onclick="ABCHealthData('Delete', ${item.id})">Delete</button>
+                        <button class="delete-button" onclick="confirmDeleteHealth(${item.id}, ${item.id})">Delete</button>
                     </td>
                 `;
                 healthDataBody.appendChild(row);
@@ -363,7 +365,7 @@ async function saveHealthDataFather() {
             });
             if (response.data.code == 201) {
                 datosSaludDetalle = response.data.data.id;
-                saveHealthDataDetail(response.data.data.id);
+                saveHealthDataDetail(datosSaludDetalle);
             } else {
                 alert(response.data.message || 'Error desconocido');
             }
@@ -402,8 +404,10 @@ async function saveHealthDataDetail(healthDataId) {
         if (!token) {
             throw new Error('No se encontró el token de autenticación.');
         }
-console.log(1)
+
         if(tipoParam == 'Add') {
+            console.log(healthDataId)
+            var datosSaludId = healthDataId;
             const response = await axios.post(ruta + '/datos-salud-detalles/create', {
                 datosSaludId,
                 duracionMinutos,
@@ -415,7 +419,7 @@ console.log(1)
                     'Content-Type': 'application/json'
                 }
             });
-    
+            console.log(response)
             if (response.data.code == 201) {
                 alert('Saved Data');
                 window.location.href = './DatosSalud.html';
@@ -433,9 +437,8 @@ console.log(1)
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(response)
     
-            if (response.data.code == 201) {
+            if (response.data.code == 200) {
                 alert('Saved Data Detail');
                 window.location.href = './DatosSalud.html';
             } else {
@@ -475,6 +478,7 @@ async function getInfoHealthData(id) {
         });
 
         const healthDataDetail = response.data[0][0];
+        console.log(response)
         idDetail = healthDataDetail.id;
         $('#duracion').val(healthDataDetail.duracion_minutos);
         $('#distancia').val(healthDataDetail.distancia_km);
@@ -483,6 +487,97 @@ async function getInfoHealthData(id) {
 
     } catch (error) {
         console.error('Error al obtener las actividades:', error);
+    }
+}
+
+async function fetchHealthDataDetailDelete(id) {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get(ruta + '/datos-salud-detalles/getById/' + id, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var healthDataDetail2 = response.data[0][0];
+        idDetailOk = healthDataDetail2.id;
+        deleteHealthDetail(idDetailOk);
+    } catch (error2) {
+        console.error('Error al obtener las actividades:', error2);
+    }
+}
+
+function confirmDeleteHealth(dataId, nombre) {
+    const confirmation = confirm(`¿Estás seguro de que deseas eliminar este Dato: ${nombre}?`);
+    if (confirmation) {
+        fetchHealthDataDetailDelete(dataId);
+    }
+}
+
+async function deleteHealthDetail(dataId) {
+    const errorMessage = document.getElementById('error-message');
+    try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            throw new Error('No se encontró el token de autenticación.');
+        }
+
+        const response = await axios.delete(ruta + `/datos-salud-detalles/delete/${dataId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.data.code == 200) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    throw new Error('No se encontró el token de autenticación.');
+                }
+        
+                const response = await axios.delete(ruta + `/datos-salud/delete/${dataId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+        
+                if (response.data.code == 200) {
+                    //deleteHealth(dataId);
+                } else {
+                    alert('Hay detalles, no se puede eliminar');
+                }
+            } catch (error) {
+                alert('Hay detalles, no se puede eliminar');
+            }
+        } else {
+            alert('Hay detalles, no se puede eliminar');
+        }
+    } catch (error) {
+        alert('Hay detalles, no se puede eliminar');
+    }
+}
+
+async function deleteHealth(dataId) {
+    const errorMessage = document.getElementById('error-message');
+    try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            throw new Error('No se encontró el token de autenticación.');
+        }
+
+        const response = await axios.delete(ruta + `/datos-salud/delete/${dataId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.data.code == 200) {
+            alert('Actividad eliminada con éxito');
+            window.location.reload();
+        } else {
+            alert('Hay detalles, no se puede eliminar');
+        }
+    } catch (error) {
+        alert('Hay detalles, no se puede eliminar');
     }
 }
 /* Datos Salud */

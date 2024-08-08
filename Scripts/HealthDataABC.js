@@ -48,6 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(tipoParam != 'Add') {
         getInfoHealthData(idParam);
+        if (tipoParam == "See") {
+            $('#selectActivity').prop('disabled', true);
+            $('#fecha').prop('disabled', true);
+            $('#duracion').prop('disabled', true);
+            $('#distancia').prop('disabled', true);
+            $('#calorias').prop('disabled', true);
+            $('#saveButton').hide();
+        }
     }
     
 });
