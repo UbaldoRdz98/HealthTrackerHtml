@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Tracker</title>
+    <link rel="stylesheet" href="../CSS/HealthDataStyle.css">
+    <link rel="stylesheet" href="../CSS/NavbarStyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left"><a href="./IndexLogin.html">Health Tracker</a></div>
+            <div class="nav-right">
+                <a href="./Actividades.html">Activities</a>
+                <a href="./DatosSalud.html">Health</a>
+                <a href="./Perfil.html">Profile</a>
+                <a href="./CerrarSesion.html">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <h1>Health Data</h1>
+        <div class="button-container">
+            <button class="btn-success" onclick="ABCHealthData('Add')">Add</button>
+        </div>
+        <div class="health-data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Activity</th>
+                        <th>Registration date</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody id="healthDataBody">
+                    <!-- Los datos se llenarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+        <div id="error-message"></div>
+    </main>
+    <script src="../Scripts/MasterScript.js"></script>
+    <script src="../Scripts/HealthDataScript.js"></script>
+</body>
+</html>

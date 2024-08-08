@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Tracker | Activities</title>
+    <link rel="stylesheet" href="../CSS/ActivitiesStyle.css">
+    <link rel="stylesheet" href="../CSS/NavbarStyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left"><a href="./IndexLogin.html">Health Tracker</a></div>
+            <div class="nav-right">
+                <a href="./Actividades.html">Activities</a>
+                <a href="./DatosSalud.html">Health</a>
+                <a href="./Perfil.html">Profile</a>
+                <a href="./CerrarSesion.html">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <h1>Activities</h1>
+        <div class="button-container">
+            <button class="btn-success" onclick="addNewActividad()">Add</button>
+        </div>
+        <div class="table-container">
+            <table id="activitiesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Calories per Hour</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script src="../Scripts/MasterScript.js"></script>
+    <script src="../Scripts/ActividadesScript.js"></script>
+</body>
+</html>
