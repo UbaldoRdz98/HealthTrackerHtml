@@ -54,7 +54,20 @@ async function validateToken() {
     } catch (error) {
         console.error('Error al obtener las actividades:', error);
     }
+}
 
+async function logOut() {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get(ruta + '/logout', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        window.location.href = '../Views/index.html';
+    } catch (error) {
+        console.error('Error al obtener las actividades:', error);
+    }
 }
 
 function register() {
@@ -406,7 +419,6 @@ async function saveHealthDataDetail(healthDataId) {
         }
 
         if(tipoParam == 'Add') {
-            console.log(healthDataId)
             var datosSaludId = healthDataId;
             const response = await axios.post(ruta + '/datos-salud-detalles/create', {
                 datosSaludId,
@@ -419,7 +431,6 @@ async function saveHealthDataDetail(healthDataId) {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(response)
             if (response.data.code == 201) {
                 alert('Saved Data');
                 window.location.href = './DatosSalud.html';
@@ -500,7 +511,7 @@ async function fetchHealthDataDetailDelete(id) {
         });
         var healthDataDetail2 = response.data[0][0];
         idDetailOk = healthDataDetail2.id;
-        deleteHealthDetail(idDetailOk);
+        deleteHealthDetail(idDetailOk, id);
     } catch (error2) {
         console.error('Error al obtener las actividades:', error2);
     }
@@ -513,7 +524,7 @@ function confirmDeleteHealth(dataId, nombre) {
     }
 }
 
-async function deleteHealthDetail(dataId) {
+async function deleteHealthDetail(dataId, dataFatherId) {
     const errorMessage = document.getElementById('error-message');
     try {
         const token = localStorage.getItem('authToken');
@@ -534,14 +545,15 @@ async function deleteHealthDetail(dataId) {
                     throw new Error('No se encontró el token de autenticación.');
                 }
         
-                const response = await axios.delete(ruta + `/datos-salud/delete/${dataId}`, {
+                const response = await axios.delete(ruta + `/datos-salud/delete/${dataFatherId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
         
                 if (response.data.code == 200) {
-                    //deleteHealth(dataId);
+                    alert('Daata deleted');
+                    window.location.reload();
                 } else {
                     alert('Hay detalles, no se puede eliminar');
                 }
@@ -556,15 +568,14 @@ async function deleteHealthDetail(dataId) {
     }
 }
 
-async function deleteHealth(dataId) {
-    const errorMessage = document.getElementById('error-message');
+async function deleteHealth(_dataId) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
             throw new Error('No se encontró el token de autenticación.');
         }
 
-        const response = await axios.delete(ruta + `/datos-salud/delete/${dataId}`, {
+        const response = await axios.delete(ruta + `/datos-salud/delete/${_dataId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -578,6 +589,61 @@ async function deleteHealth(dataId) {
         }
     } catch (error) {
         alert('Hay detalles, no se puede eliminar');
+    }
+}
+
+async function saveProfile() {
+    try {
+        const token = localStorage.getItem('authToken');
+        const nombre = $('#nombre').val();
+        const apellidoPaterno = $('#apellidoPaterno').val();
+        const apellidoMaterno = $('#apellidoMaterno').val();
+        const fechaNacimiento = $('#fechaNacimiento').val();
+        const email = $('#email').val();
+        const password = $('#password').val();
+        
+        if (!token) {
+            throw new Error('No se encontró el token de autenticación.');
+        }
+        
+        var response;
+        if (password != '') {
+            response = await axios.put(ruta + '/users/update/' + userId, {
+                nombre,
+                apellidoPaterno,
+                apellidoMaterno,
+                fechaNacimiento,
+                email,
+                password
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        } else {
+            response = await axios.put(ruta + '/users/update/' + userId, {
+                nombre,
+                apellidoPaterno,
+                apellidoMaterno,
+                fechaNacimiento,
+                email
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        if (response.data.code == 200) {
+            alert('Save Data');
+            window.location.href = '../Views/IndexLogin.html';
+        } else {
+            alert(response.data.message || 'Error desconocido');
+        }
+    } catch (error) {
+        alert(error.message || 'Error al conectar con el servidor');
     }
 }
 /* Datos Salud */
