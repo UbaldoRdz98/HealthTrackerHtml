@@ -18,7 +18,7 @@ async function fetchProfile() {
         $("#fechaNacimiento").val(profile.fecha_nacimiento);
         $("#email").val(profile.email);
     } catch (error2) {
-        console.error('Error al obtener las actividades:', error2);
+        console.error('Error getting user information:', error2);
     }
 }
 

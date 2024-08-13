@@ -33,7 +33,7 @@ async function loadSelectActivitiesItems(){
         });
 
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error getting activities:', error);
     }
 }
 

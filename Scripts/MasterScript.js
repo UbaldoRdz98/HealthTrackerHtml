@@ -6,7 +6,7 @@ function formatDateToDDMMYYYY(isoDate) {
     const date = new Date(isoDate);
 
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan desde 0
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
 
     return `${day}-${month}-${year}`;
@@ -31,7 +31,7 @@ async function getUserInfo() {
         });
         localStorage.setItem('userId', response.data.id);
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error getting user information:', error);
     }
 }
 
@@ -52,7 +52,7 @@ async function validateToken() {
             }
         }
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error getting token information:', error);
     }
 }
 
@@ -66,7 +66,7 @@ async function logOut() {
         });
         window.location.href = '../Views/index.html';
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error in Logout:', error);
     }
 }
 
@@ -92,16 +92,14 @@ function register() {
     .then(response => {
         if (response.data.code == 201) {
             
-            alert('Usuario Creado!');
+            alert('Usuario Created!');
             window.location.href = '../Views/Login.html';
         } else {
-            alert(response.data.message || 'Error desconocido');
-            //errorMessage.textContent = response.data.message || 'Error desconocido';
+            alert(response.data.message || 'Unknow Error');
         }
     })
     .catch(error => {
-        alert(error.message || 'Error al conectar con el servidor');
-        //errorMessage.textContent = error.message || 'Error al conectar con el servidor';
+        alert(error.message || 'Error connecting to server');
     });
 }
 
@@ -125,13 +123,11 @@ function login() {
             showAlert('Login Success!', 'success');
             window.location.href = '../Views/IndexLogin.html';
         } else {
-            alert(response.data.message || 'Error desconocido');
-            //errorMessage.textContent = response.data.message || 'Error desconocido';
+            alert(response.data.message || 'Unknow Error');
         }
     })
     .catch(error => {
-        alert(error.message || 'Error al conectar con el servidor');
-        //errorMessage.textContent = error.message || 'Error al conectar con el servidor';
+        alert(error.message || 'Error connecting to server');
     });
 }
 
@@ -140,7 +136,7 @@ async function fetchActivities() {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
         
         const response = await axios.get(ruta + '/catalogo-actividades/get', {
@@ -160,8 +156,8 @@ async function fetchActivities() {
                 <td>${activity.nombre}</td>
                 <td>${activity.calorias_hora}</td>
                 <td>
-                    <button onclick="editActivity(${activity.id})">Editar</button>
-                    <button onclick="confirmDelete(${activity.id},'${activity.nombre}')">Eliminar</button>
+                    <button onclick="editActivity(${activity.id})">Edit</button>
+                    <button onclick="confirmDelete(${activity.id},'${activity.nombre}')">Delete</button>
                 </td>
             `;
             tbody.appendChild(row);
@@ -175,7 +171,7 @@ async function fetchActivitiesCalories(id) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
         
         const response = await axios.get(ruta + '/catalogo-actividades/getById/' + id, {
@@ -202,7 +198,7 @@ async function saveActivity() {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.post(ruta + '/catalogo-actividades/create', {
@@ -217,13 +213,13 @@ async function saveActivity() {
         });
 
         if (response.data.code == 201) {
-            alert('Actividad guardada con éxito');
+            alert('Activity saved successfully');
             window.location.href = './Actividades.html';
         } else {
-            alert(response.data.message || 'Error desconocido');
+            alert(response.data.message || 'Unknow Error');
         }
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 
@@ -241,7 +237,7 @@ async function updateActivity() {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.put(ruta + `/catalogo-actividades/update/${activityId}`, {
@@ -256,18 +252,18 @@ async function updateActivity() {
         });
 
         if (response.data.code == 200) {
-            alert('Actividad actualizada con éxito');
+            alert('Activity updated successfully');
             window.location.href = './Actividades.html';
         } else {
-            alert(response.data.message || 'Error desconocido');
+            alert(response.data.message || 'Unknow Error');
         }
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 
 function confirmDelete(activityId, nombre) {
-    const confirmation = confirm(`¿Estás seguro de que deseas eliminar esta actividad: ${nombre}?`);
+    const confirmation = confirm(`Are you sure you want to delete this activity: ${nombre}?`);
     if (confirmation) {
         deleteActivity(activityId);
     }
@@ -278,7 +274,7 @@ async function deleteActivity(activityId) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.delete(ruta + `/catalogo-actividades/delete/${activityId}`, {
@@ -288,13 +284,13 @@ async function deleteActivity(activityId) {
         });
 
         if (response.data.code == 200) {
-            alert('Actividad eliminada con éxito');
+            alert('Activity successfully deleted');
             window.location.reload();
         } else {
-            alert('Hay detalles, no se puede eliminar');
+            alert('There are details, it cannot be deleted');
         }
     } catch (error) {
-        alert('Hay detalles, no se puede eliminar');
+        alert('There are details, it cannot be deleted');
     }
 }
 
@@ -305,7 +301,7 @@ async function fetchHealthData() {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.get(ruta + '/datos-salud/get', {
@@ -334,10 +330,10 @@ async function fetchHealthData() {
                 healthDataBody.appendChild(row);
             });
         } else {
-            alert(error.message || 'Error al conectar con el servidor');
+            alert(error.message || 'Error connecting to server');
         }
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 
@@ -351,7 +347,7 @@ async function saveHealthData(){
     if ((actividadId != '' & actividadId != 0) & (fechaRegistro != '') & (duracionMinutos != '') & (distanciaKm != '') & (caloriasQuemadas != '')){
         saveHealthDataFather();
     } else {
-        alert('Necesita llenar todos los campos');
+        alert('You need to fill in all fields');
     }
 
 }
@@ -362,7 +358,7 @@ async function saveHealthDataFather() {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
         var url = ''
         if(tipoParam == 'Add') {
@@ -380,7 +376,7 @@ async function saveHealthDataFather() {
                 datosSaludDetalle = response.data.data.id;
                 saveHealthDataDetail(datosSaludDetalle);
             } else {
-                alert(response.data.message || 'Error desconocido');
+                alert(response.data.message || 'Unknow Error');
             }
         } else {
             const response = await axios.put(ruta + '/datos-salud/update/' + idParam, {
@@ -396,14 +392,14 @@ async function saveHealthDataFather() {
             if (response.data.code == 200) {
                 saveHealthDataDetail(datosSaludDetalle);
             } else {
-                alert(response.data.message || 'Error desconocido');
+                alert(response.data.message || 'Unknow Error');
             }
         }
         
 
         
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 
@@ -415,7 +411,7 @@ async function saveHealthDataDetail(healthDataId) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         if(tipoParam == 'Add') {
@@ -435,7 +431,7 @@ async function saveHealthDataDetail(healthDataId) {
                 alert('Saved Data');
                 window.location.href = './DatosSalud.html';
             } else {
-                alert(response.data.message || 'Error desconocido');
+                alert(response.data.message || 'Unknow Error');
             }
         } else {
             const response = await axios.put(ruta + '/datos-salud-detalles/update/' + idDetail, {
@@ -453,12 +449,12 @@ async function saveHealthDataDetail(healthDataId) {
                 alert('Saved Data Detail');
                 window.location.href = './DatosSalud.html';
             } else {
-                alert(response.data.message || 'Error desconocido');
+                alert(response.data.message || 'Unknow Error');
             }
         }
         
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 
@@ -477,7 +473,7 @@ async function getInfoHealthData(id) {
         fetchActivitiesCalories(act);
         $('#fecha').val(healthData.fecha_registro);
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error getting activities:', error);
     }
     
     $('#selectActivity').prop('disabled', true);
@@ -488,7 +484,7 @@ async function getInfoHealthData(id) {
             }
         });
 
-        const healthDataDetail = response.data[0][0];
+        const healthDataDetail = response.data[0];
         console.log(response)
         idDetail = healthDataDetail.id;
         $('#duracion').val(healthDataDetail.duracion_minutos);
@@ -497,7 +493,7 @@ async function getInfoHealthData(id) {
 
 
     } catch (error) {
-        console.error('Error al obtener las actividades:', error);
+        console.error('Error getting activities:', error);
     }
 }
 
@@ -513,12 +509,12 @@ async function fetchHealthDataDetailDelete(id) {
         idDetailOk = healthDataDetail2.id;
         deleteHealthDetail(idDetailOk, id);
     } catch (error2) {
-        console.error('Error al obtener las actividades:', error2);
+        console.error('Error getting activities:', error2);
     }
 }
 
 function confirmDeleteHealth(dataId, nombre) {
-    const confirmation = confirm(`¿Estás seguro de que deseas eliminar este Dato: ${nombre}?`);
+    const confirmation = confirm(`Are you sure you want to delete this Data: ${nombre}?`);
     if (confirmation) {
         fetchHealthDataDetailDelete(dataId);
     }
@@ -529,7 +525,7 @@ async function deleteHealthDetail(dataId, dataFatherId) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.delete(ruta + `/datos-salud-detalles/delete/${dataId}`, {
@@ -542,7 +538,7 @@ async function deleteHealthDetail(dataId, dataFatherId) {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    throw new Error('No se encontró el token de autenticación.');
+                    throw new Error('Authentication token not found.');
                 }
         
                 const response = await axios.delete(ruta + `/datos-salud/delete/${dataFatherId}`, {
@@ -552,19 +548,19 @@ async function deleteHealthDetail(dataId, dataFatherId) {
                 });
         
                 if (response.data.code == 200) {
-                    alert('Daata deleted');
+                    alert('Daaa deleted');
                     window.location.reload();
                 } else {
-                    alert('Hay detalles, no se puede eliminar');
+                    alert('There are details, it cannot be deleted');
                 }
             } catch (error) {
-                alert('Hay detalles, no se puede eliminar');
+                alert('There are details, it cannot be deleted');
             }
         } else {
-            alert('Hay detalles, no se puede eliminar');
+            alert('There are details, it cannot be deleted');
         }
     } catch (error) {
-        alert('Hay detalles, no se puede eliminar');
+        alert('There are details, it cannot be deleted');
     }
 }
 
@@ -572,7 +568,7 @@ async function deleteHealth(_dataId) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
 
         const response = await axios.delete(ruta + `/datos-salud/delete/${_dataId}`, {
@@ -582,13 +578,13 @@ async function deleteHealth(_dataId) {
         });
 
         if (response.data.code == 200) {
-            alert('Actividad eliminada con éxito');
+            alert('Information deleted successfully');
             window.location.reload();
         } else {
-            alert('Hay detalles, no se puede eliminar');
+            alert('There are details, it cannot be deleted');
         }
     } catch (error) {
-        alert('Hay detalles, no se puede eliminar');
+        alert('There are details, it cannot be deleted');
     }
 }
 
@@ -603,7 +599,7 @@ async function saveProfile() {
         const password = $('#password').val();
         
         if (!token) {
-            throw new Error('No se encontró el token de autenticación.');
+            throw new Error('Authentication token not found.');
         }
         
         var response;
@@ -640,10 +636,10 @@ async function saveProfile() {
             alert('Save Data');
             window.location.href = '../Views/IndexLogin.html';
         } else {
-            alert(response.data.message || 'Error desconocido');
+            alert(response.data.message || 'Unknow Error');
         }
     } catch (error) {
-        alert(error.message || 'Error al conectar con el servidor');
+        alert(error.message || 'Error connecting to server');
     }
 }
 /* Datos Salud */
